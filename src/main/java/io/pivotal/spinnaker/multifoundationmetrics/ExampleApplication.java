@@ -58,22 +58,3 @@ class PersonController {
   }
 }
 
-@RestController
-class DatadogVerificationController {
-  private final String apiKey;
-  private final String appKey;
-
-  DatadogVerificationController(@Value("${management.metrics.export.datadog.api-key}") String apiKey,
-                                @Value("${management.metrics.export.datadog.application-key}") String appKey) {
-    this.apiKey = apiKey;
-    this.appKey = appKey;
-  }
-
-  @GetMapping(path = "/datadog/keys")
-  public Map<String, String> keys() {
-    return new HashMap<String, String>() {{
-      put("api-key", apiKey);
-      put("app-key", appKey);
-    }};
-  }
-}
