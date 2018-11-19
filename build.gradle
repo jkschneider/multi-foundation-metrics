@@ -32,4 +32,5 @@ dependencies {
 	implementation 'commons-io:commons-io:latest.release'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	implementation 'com.netflix.frigga:frigga:0.18.0'
 }
