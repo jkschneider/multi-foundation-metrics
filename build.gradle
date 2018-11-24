@@ -25,7 +25,8 @@ repositories {
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
-	implementation('io.micrometer:micrometer-registry-datadog')
+	implementation('io.micrometer:micrometer-registry-prometheus')
+	implementation 'io.prometheus:simpleclient_pushgateway:0.5.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	implementation 'org.projectlombok:lombok:latest.release'
