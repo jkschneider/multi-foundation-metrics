@@ -1,0 +1,59 @@
+{
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "jschneider@pivotal.io",
+  "limitConcurrent": true,
+  "stages": [
+    {
+      "clusters": [
+        {
+          "account": "cf-prod",
+          "application": "metricsdemo",
+          "artifact": {
+            "account": "jenkins",
+            "reference": "http://35.185.67.81:8080/job/multi-foundation-metrics/lastSuccessfulBuild/artifact/build/libs/multifoundationmetrics-0.0.1-SNAPSHOT.jar",
+            "type": "artifact"
+          },
+          "cloudProvider": "cloudfoundry",
+          "freeFormDetails": "",
+          "manifest": {
+            "diskQuota": "1024M",
+            "env": {
+              "SPRING_APPLICATION_JSON": "{\"cf.foundation\": \"cf-prod\", \"cf.org\": \"development\", \"cf.space\": \"development\"}"
+            },
+            "environment": [
+              {
+                "key": "SPRING_APPLICATION_JSON",
+                "value": "{\"cf.foundation\": \"cf-prod\", \"cf.org\": \"development\", \"cf.space\": \"development\"}"
+              }
+            ],
+            "instances": 1,
+            "memory": "1024M",
+            "routes": [
+              "mfmetrics.apps.calabasas.cf-app.com"
+            ],
+            "services": [],
+            "type": "direct"
+          },
+          "provider": "cloudfoundry",
+          "region": "development > development",
+          "stack": "",
+          "startApplication": true,
+          "strategy": ""
+        }
+      ],
+      "name": "Deploy",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "type": "deploy"
+    }
+  ],
+  "triggers": [
+    {
+      "enabled": true,
+      "job": "multi-foundation-metrics",
+      "master": "my-jenkins-master",
+      "type": "jenkins"
+    }
+  ],
+  "updateTs": "1543029546000"
+}
