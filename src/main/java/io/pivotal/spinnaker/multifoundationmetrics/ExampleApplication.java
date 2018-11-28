@@ -54,8 +54,7 @@ public class ExampleApplication {
 
         Names names = Names.parseName(serverGroup);
 
-        return MeterFilter.commonTags(Tags.of("foundation", foundation, "org",
-                "app", names.getApp(), "cluster", names.getCluster(), "version", names.getSequence() == null ? "v000" : names.getSequence().toString()));
+        return MeterFilter.commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster()));
     }
 }
 
