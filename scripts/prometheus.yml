@@ -15,5 +15,13 @@ scrape_configs:
     static_configs:
       - targets: ['10.200.10.1:8081']
 
+  - job_name: 'promregator2'
+
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    honor_labels: true
+    static_configs:
+      - targets: ['10.200.10.1:8082']
+
 rule_files:
   - prometheus_rules.yml
