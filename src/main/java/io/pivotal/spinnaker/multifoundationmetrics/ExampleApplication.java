@@ -131,9 +131,9 @@ class EndpointHealthConfiguration {
 
     @Bean
     public HealthIndicator endpointHealthIndicator(SimpleMeterRegistry registry) {
-        return () -> Stream.of(registry.find("http.server.requests").timers())
+        return () -> Stream.of(registry.find("http.server.requests").tag("uri", "/persons").timers())
                 .map(requestTimers -> {
-                    Map<Boolean, Long> requestsBySuccess = requestTimers.stream().collect(Collectors.partitioningBy(t -> "SUCCESS".equals(t.getId().getTag("outcome")),
+                    Map<Boolean, Long> requestsBySuccess = requestTimers.stream().collect(Collectors.partitioningBy(t -> "200".equals(t.getId().getTag("status")),
                             Collectors.summingLong(Timer::count)));
                     Long successes = requestsBySuccess.getOrDefault(true, 0L);
                     Long total = successes + requestsBySuccess.getOrDefault(false, 0L);
