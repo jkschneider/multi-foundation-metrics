@@ -7,13 +7,13 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'pushgateway'
+  - job_name: 'promregator'
 
     scrape_interval: 10s
     metrics_path: '/metrics'
     honor_labels: true
     static_configs:
-      - targets: ['prometheus-push.apps.calabasas.cf-app.com']
+      - targets: ['10.200.10.1:8081']
 
 rule_files:
   - prometheus_rules.yml

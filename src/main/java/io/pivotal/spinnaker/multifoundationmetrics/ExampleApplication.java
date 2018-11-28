@@ -41,9 +41,6 @@ public class ExampleApplication {
 
     @Bean
     MeterFilter commonTags(@Value("${cf.foundation:local}") String foundation,
-                           @Value("${cf.org:local}") String org,
-                           @Value("${cf.space:local}") String space,
-                           @Value("${CF_INSTANCE_GUID:local}") String instance,
                            @Value("${VCAP_APPLICATION:#{null}}") String app) {
         String serverGroup = Optional.ofNullable(app).map(app2 -> {
             try {
@@ -57,7 +54,7 @@ public class ExampleApplication {
 
         Names names = Names.parseName(serverGroup);
 
-        return MeterFilter.commonTags(Tags.of("foundation", foundation, "org", org, "space", space, "instance", instance,
+        return MeterFilter.commonTags(Tags.of("foundation", foundation, "org",
                 "app", names.getApp(), "cluster", names.getCluster(), "version", names.getSequence() == null ? "v000" : names.getSequence().toString()));
     }
 }
