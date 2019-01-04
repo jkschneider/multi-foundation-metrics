@@ -1,34 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "5.1.0"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "5.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -45,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
   "links": [],
   "panels": [
     {
@@ -53,7 +22,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "prometheus",
       "fill": 0,
       "gridPos": {
         "h": 9,
@@ -87,6 +56,7 @@
       "steppedLine": true,
       "targets": [
         {
+          "$$hashKey": "object:199",
           "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/persons\"}[1m])) by (app_name, cf_instance_number)",
           "format": "time_series",
           "interval": "",
@@ -140,7 +110,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "prometheus",
       "fill": 0,
       "gridPos": {
         "h": 9,
@@ -172,6 +142,7 @@
       "steppedLine": true,
       "targets": [
         {
+          "$$hashKey": "object:260",
           "expr": "rate(http_server_requests_seconds_count{uri=\"/persons\", status!=\"200\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
@@ -224,7 +195,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "prometheus",
       "fill": 0,
       "gridPos": {
         "h": 9,
@@ -256,6 +227,7 @@
       "steppedLine": true,
       "targets": [
         {
+          "$$hashKey": "object:314",
           "expr": "sum(http_server_requests_seconds_max{uri=\"/persons\", status=\"200\"}) by (app_name, foundation, cf_instance_number)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -343,5 +315,5 @@
   "timezone": "",
   "title": "Requests by instance",
   "uid": "XRKjgoLiz",
-  "version": 2
+  "version": 1
 }

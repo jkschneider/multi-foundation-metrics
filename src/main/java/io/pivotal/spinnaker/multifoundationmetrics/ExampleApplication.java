@@ -56,6 +56,23 @@ public class ExampleApplication {
 
         return MeterFilter.commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster()));
     }
+
+    @Bean
+    public SimpleMeterRegistry registry() {
+        SimpleConfig config = new SimpleConfig() {
+            @Override
+            public String get(String key) {
+                return null;
+            }
+
+            @Override
+            public CountingMode mode() {
+                return CountingMode.STEP;
+            }
+        };
+
+        return new SimpleMeterRegistry(config, Clock.SYSTEM);
+    }
 }
 
 @Data
@@ -113,38 +130,22 @@ class EndpointHealthConfiguration {
     private Double endpointFailureRateThreshold;
 
     @Bean
-    public SimpleMeterRegistry registry() {
-        SimpleConfig config = new SimpleConfig() {
-            @Override
-            public String get(String key) {
-                return null;
-            }
-
-            @Override
-            public CountingMode mode() {
-                return CountingMode.STEP;
-            }
-        };
-
-        return new SimpleMeterRegistry(config, Clock.SYSTEM);
-    }
-
-    @Bean
     public HealthIndicator endpointHealthIndicator(SimpleMeterRegistry registry) {
-        return () -> Stream.of(registry.find("http.server.requests").tag("uri", "/persons").timers())
-                .map(requestTimers -> {
-                    Map<Boolean, Long> requestsBySuccess = requestTimers.stream().collect(Collectors.partitioningBy(t -> "200".equals(t.getId().getTag("status")),
+        return () -> Stream.of(
+                registry.find("http.server.requests")
+                        .tag("uri", "/persons").timers()
+        ).map(requestTimers -> {
+            Map<Boolean, Long> requestsBySuccess = requestTimers.stream().collect(
+                    Collectors.partitioningBy(t -> "200".equals(t.getId().getTag("status")),
                             Collectors.summingLong(Timer::count)));
-                    Long successes = requestsBySuccess.getOrDefault(true, 0L);
-                    Long total = successes + requestsBySuccess.getOrDefault(false, 0L);
-                    double failureRate = (double) (total - successes) / total;
-                    return (failureRate > endpointFailureRateThreshold ? Health.down() : Health.up())
-                            .withDetail("endpoint.failure.rate", failureRate)
-                            .withDetail("endpoint.successes", successes)
-                            .withDetail("endpoint.total", total)
-                            .build();
-                })
-                .findFirst()
-                .orElse(Health.up().build());
+            Long successes = requestsBySuccess.getOrDefault(true, 0L);
+            Long total = successes + requestsBySuccess.getOrDefault(false, 0L);
+            double failureRate = (double) (total - successes) / total;
+            return (failureRate > endpointFailureRateThreshold ? Health.down() : Health.up())
+                    .withDetail("endpoint.failure.rate", failureRate)
+                    .withDetail("endpoint.successes", successes)
+                    .withDetail("endpoint.total", total)
+                    .build();
+        }).findFirst().orElse(Health.up().build());
     }
 }
