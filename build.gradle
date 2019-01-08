@@ -3,6 +3,7 @@ plugins {
 	id 'com.jfrog.artifactory' version '4.9.0'
 	id 'org.springframework.boot' version '2.1.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+	id 'nebula.maven-publish' version '9.4.4'
 }
 
 group = 'io.pivotal.spinnaker'
@@ -26,3 +27,25 @@ dependencies {
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	implementation 'com.netflix.frigga:frigga:0.18.0'
 }
+
+artifactory {
+	contextUrl = 'http://artifactory.apps.montclair.cf-app.com/artifactory'
+	publish {
+		repository {
+			repoKey = 'libs-snapshot-local'
+			username = artifactoryUser
+			password = artifactoryPassword
+		}
+		defaults {
+			publications 'nebula'
+		}
+	}
+}
+
+task('generateBuildProperties') {
+	doLast {
+		file('build/build.properties') << "BUILD_VERSION=$project.version"
+	}
+}
+
+build.dependsOn('generateBuildProperties')
