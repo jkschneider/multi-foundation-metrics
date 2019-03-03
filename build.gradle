@@ -30,10 +30,10 @@ dependencies {
 }
 
 artifactory {
-	contextUrl = 'http://artifactory.apps.montclair.cf-app.com/artifactory'
+	contextUrl = 'http://artifactory.apps.atherton.cf-app.com/artifactory'
 	publish {
 		repository {
-			repoKey = 'libs-snapshot-local'
+			repoKey = 'libs-semver-snapshots-local'
 			username = artifactoryUser
 			password = artifactoryPassword
 		}
