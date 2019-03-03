@@ -4,6 +4,7 @@ plugins {
 	id 'org.springframework.boot' version '2.1.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 	id 'nebula.maven-publish' version '9.4.4'
+	id 'nebula.release' version '9.2.0'
 }
 
 group = 'io.pivotal.spinnaker'
@@ -29,7 +30,7 @@ dependencies {
 }
 
 artifactory {
-	contextUrl = 'http://artifactory.apps.montclair.cf-app.com/artifactory'
+	contextUrl = 'http://localhost:9099/artifactory'
 	publish {
 		repository {
 			repoKey = 'libs-snapshot-local'
@@ -42,6 +43,9 @@ artifactory {
 	}
 }
 
+release.dependsOn('artifactoryDeploy')
+
+// Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.
 task('generateBuildProperties') {
 	doLast {
 		file('build/build.properties') << "BUILD_VERSION=$project.version"
