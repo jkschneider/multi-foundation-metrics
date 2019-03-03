@@ -43,7 +43,7 @@ artifactory {
 	}
 }
 
-release.dependsOn('artifactoryDeploy')
+tasks.release.dependsOn('artifactoryDeploy')
 
 // Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.
 task('generateBuildProperties') {
