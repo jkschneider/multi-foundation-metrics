@@ -34,7 +34,7 @@ artifactory {
 	contextUrl = 'https://repo.spring.io'
 	publish {
 		repository {
-			repoKey = 'libs-demo-local'
+			repoKey = 'libs-spinnaker-local'
 			username = artifactoryUser
 			password = artifactoryPassword
 		}
