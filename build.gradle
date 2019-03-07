@@ -44,6 +44,18 @@ artifactory {
 	}
 }
 
+publishing {
+	publications {
+		withType(MavenPublication) {
+			pom.withXml {
+				Node pomNode = asNode()
+				pomNode.remove(pomNode.get("dependencies"))
+				pomNode.remove(pomNode.get("dependencyManagement"))
+			}
+		}
+	}
+}
+
 tasks.release.dependsOn('artifactoryDeploy')
 
 // Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.
