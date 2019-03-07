@@ -8,7 +8,7 @@ plugins {
 	id 'nebula.info' version '5.0.0'
 }
 
-group = 'io.pivotal'
+group = 'io.pivotal.spinnaker'
 
 repositories {
 	mavenCentral()
