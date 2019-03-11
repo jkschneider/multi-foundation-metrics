@@ -35,8 +35,10 @@ artifactory {
 	publish {
 		repository {
 			repoKey = 'libs-spinnaker-local'
-			username = artifactoryUser
-			password = artifactoryPassword
+			if(hasProperty('artifactoryUser') && hasProperty('artifactoryPassword')) {
+				username = artifactoryUser
+				password = artifactoryPassword
+			}
 		}
 		defaults {
 			publications 'nebula'
