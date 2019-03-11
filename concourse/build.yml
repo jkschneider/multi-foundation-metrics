@@ -9,4 +9,4 @@ inputs:
   - name: source
 
 run:
-  path: source/ci/build.sh
+  path: source/concourse/build.sh
