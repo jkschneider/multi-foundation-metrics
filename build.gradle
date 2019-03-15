@@ -58,6 +58,21 @@ publishing {
 	}
 }
 
+if(hasProperty('nexusUrl')) {
+	publishing {
+		repositories {
+			maven {
+				name = 'nexus'
+				url = "${nexusUrl}/repository/maven-releases/"
+				credentials {
+					username = nexusUser
+					password = nexusPassword
+				}
+			}
+		}
+	}
+}
+
 tasks.release.dependsOn('artifactoryDeploy')
 
 // Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.

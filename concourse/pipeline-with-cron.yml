@@ -1,0 +1,20 @@
+---
+resources:
+  - name: source
+    type: git
+    source:
+      uri: https://github.com/jkschneider/multi-foundation-metrics.git
+  - name: 5m
+    type: time
+    source: {interval: 5m}
+
+jobs:
+  - name: gradle-build
+    public: true
+    plan:
+      - get: source
+        trigger: true
+      - get: 5m
+        trigger: true
+      - task: build
+        file: source/concourse/build.yml
