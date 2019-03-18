@@ -1,9 +1,21 @@
 ---
+resource_types:
+- name: properties
+  type: registry-image
+  source:
+    repository: driepinter/props-resource
+    tag: latest
+
 resources:
   - name: source
     type: git
     source:
-      uri: https://github.com/jkschneider/multi-foundation-metrics.git
+      uri: https://github.com/jmelchio/multi-foundation-metrics.git
+
+  - name: gradle-props
+    type: properties
+    source:
+      path: gradle-props/build.properties
 
 jobs:
   - name: gradle-build
@@ -13,3 +25,4 @@ jobs:
         trigger: true
       - task: build
         file: source/concourse/build.yml
+      - put: gradle-props

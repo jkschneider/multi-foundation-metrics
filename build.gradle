@@ -78,7 +78,9 @@ tasks.release.dependsOn('artifactoryDeploy')
 // Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.
 task('generateBuildProperties') {
 	doLast {
-		file('build/build.properties') << "BUILD_VERSION=$project.version"
+		file('build/build.properties').newWriter().withWriter { w ->
+		  w << "BUILD_VERSION=$project.version"
+		}
 	}
 }
 
