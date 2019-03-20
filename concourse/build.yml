@@ -8,5 +8,8 @@ image_resource:
 inputs:
   - name: source
 
+outputs:
+  - name: gradle-props
+
 run:
   path: source/concourse/build.sh
