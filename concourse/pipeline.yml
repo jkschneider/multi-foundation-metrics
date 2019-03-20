@@ -10,7 +10,7 @@ resources:
   - name: source
     type: git
     source:
-      uri: https://github.com/jkschneider/multi-foundation-metrics.git
+      uri: https://github.com/jmelchio/multi-foundation-metrics.git
 
   - name: gradle-props
     type: properties
