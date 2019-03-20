@@ -30,20 +30,21 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:latest.release'
 }
 
-artifactory {
-	contextUrl = 'https://repo.spring.io'
-	publish {
-		repository {
-			repoKey = 'libs-spinnaker-local'
-			if(hasProperty('artifactoryUser') && hasProperty('artifactoryPassword')) {
+if(hasProperty('artifactoryUser') && hasProperty('artifactoryPassword')) {
+	artifactory {
+		contextUrl = 'https://repo.spring.io'
+		publish {
+			repository {
+				repoKey = 'libs-spinnaker-local'
 				username = artifactoryUser
 				password = artifactoryPassword
 			}
-		}
-		defaults {
-			publications 'nebula'
+			defaults {
+				publications 'nebula'
+			}
 		}
 	}
+	tasks.release.dependsOn('artifactoryDeploy')
 }
 
 publishing {
@@ -72,8 +73,6 @@ if(hasProperty('nexusUrl')) {
 		}
 	}
 }
-
-tasks.release.dependsOn('artifactoryDeploy')
 
 // Can be used with a Jinja template to inflate a Maven artifact from Jenkins trigger context.
 task('generateBuildProperties') {
