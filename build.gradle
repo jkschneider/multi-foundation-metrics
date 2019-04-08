@@ -84,5 +84,3 @@ task('generateBuildProperties') {
 }
 
 build.dependsOn('generateBuildProperties')
-
-throw new IllegalStateException("fail me")
