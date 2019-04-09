@@ -6,7 +6,7 @@ image_resource:
   source: {repository: java, tag: openjdk-8}
 
 inputs:
-  - name: spinnaker-stage-exec
+  - name: source
 
 run:
   path: source/concourse/test.sh
