@@ -4,4 +4,4 @@ set -e
 
 export TERM=${TERM:-dumb}
 cd source
-./gradlew --no-daemon integrationTest
+./gradlew --no-daemon dependencies
