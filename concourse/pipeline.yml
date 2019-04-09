@@ -47,5 +47,6 @@ jobs:
     plan:
       - get: spinnaker-stage-exec
         trigger: true
+      - get: source
       - task: build
-        file: spinnaker-stage-exec/concourse/test.yml
+        file: source/concourse/test.yml

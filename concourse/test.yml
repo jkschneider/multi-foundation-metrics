@@ -9,4 +9,4 @@ inputs:
   - name: spinnaker-stage-exec
 
 run:
-  path: spinnaker-stage-exec/concourse/test.sh
+  path: source/concourse/test.sh
