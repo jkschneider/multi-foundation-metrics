@@ -5,6 +5,11 @@ resource_types:
   source:
     repository: driepinter/props-resource
     tag: latest
+- name: spinnaker-resource
+  type: docker-image
+  source:
+    repository: cfspinnaker/spinnaker-resource
+    tag: latest
 
 resources:
   - name: source
@@ -17,6 +22,17 @@ resources:
     source:
       path: gradle-props/build.properties
 
+  - name: spinnaker-stage-exec
+    type: spinnaker-resource
+    source:
+      base_url: http://10.200.10.1:8084/
+      app_name: metricsdemo
+      master: concourse-local
+      team_name: main
+      pipeline_name: multifoundationmetrics
+      resource_name: spinnaker-stage-exec
+      path: configuration.properties
+
 jobs:
   - name: gradle-build
     public: true
@@ -26,3 +42,10 @@ jobs:
       - task: build
         file: source/concourse/build.yml
       - put: gradle-props
+  - name: e2e-tests
+    public: true
+    plan:
+      - get: spinnaker-stage-exec
+        trigger: true
+      - task: build
+        file: spinnaker-stage-exec/concourse/test.yml
