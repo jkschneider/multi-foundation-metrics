@@ -6,12 +6,27 @@ plugins {
 	id 'nebula.maven-publish' version '9.5.0'
 	id 'nebula.release' version '9.2.0'
 	id 'nebula.info' version '5.0.0'
+	id 'com.bmuschko.docker-spring-boot-application' version '4.7.0'
 }
 
 group = 'io.pivotal.spinnaker'
 
 repositories {
 	mavenCentral()
+}
+
+if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
+	docker {
+		registryCredentials {
+			username = dockerUser
+			password = dockerPassword
+			email = 'jkschneider@gmail.com'
+		}
+
+		springBootApplication {
+			tag = "$dockerUser/multifoundationmetrics"
+		}
+	}
 }
 
 dependencies {
