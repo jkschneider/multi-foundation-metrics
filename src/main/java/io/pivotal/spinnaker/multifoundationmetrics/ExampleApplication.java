@@ -10,6 +10,9 @@ import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.simple.CountingMode;
 import io.micrometer.core.instrument.simple.SimpleConfig;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.micrometer.prometheus.rsocket.PrometheusRSocketClient;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -37,6 +40,19 @@ import java.util.stream.Stream;
 public class ExampleApplication {
     public static void main(String[] args) {
         SpringApplication.run(ExampleApplication.class, args);
+    }
+}
+
+@Configuration
+class MetricsConfiguration {
+    @Bean
+    PrometheusMeterRegistry prometheusMeterRegistry() {
+        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+
+        PrometheusRSocketClient.connect(registry, "23.251.146.199", 7001)
+          .subscribe();
+
+        return registry;
     }
 
     @Bean
