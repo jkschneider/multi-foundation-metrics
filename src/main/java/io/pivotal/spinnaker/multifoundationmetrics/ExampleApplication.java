@@ -60,7 +60,8 @@ class MetricsConfiguration {
 
     @Bean
     MeterFilter commonTags(@Value("${cf.foundation:local}") String foundation,
-                           @Value("${VCAP_APPLICATION:#{null}}") String app) {
+                           @Value("${VCAP_APPLICATION:#{null}}") String app,
+                           @Value("${CF_INSTANCE_INDEX:0}") String instanceIndex) {
         String serverGroup = Optional.ofNullable(app).map(app2 -> {
             try {
                 Map<String, Object> vcapApplication = new ObjectMapper().readValue(app, new TypeReference<Map<String, Object>>() {
@@ -73,7 +74,8 @@ class MetricsConfiguration {
 
         Names names = Names.parseName(serverGroup);
 
-        return MeterFilter.commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster()));
+        return MeterFilter.commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster(),
+          "cf.instance.number", instanceIndex));
     }
 
     @Bean
