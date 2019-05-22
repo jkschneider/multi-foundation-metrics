@@ -33,12 +33,9 @@ if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-actuator')
-	implementation('org.springframework.boot:spring-boot-starter-webflux')
-	implementation('io.micrometer:micrometer-registry-prometheus')
-	implementation 'io.micrometer.prometheus:prometheus-rsocket-proxy-client:0.3.1'
-
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'io.micrometer.publishing:prometheus-rsocket-spring:0.6.2'
 
 	implementation 'commons-io:commons-io:latest.release'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
@@ -47,6 +44,8 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok:latest.release'
 	annotationProcessor 'org.projectlombok:lombok:latest.release'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 if(hasProperty('artifactoryUser') && hasProperty('artifactoryPassword')) {

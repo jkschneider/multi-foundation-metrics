@@ -10,10 +10,6 @@ import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.simple.CountingMode;
 import io.micrometer.core.instrument.simple.SimpleConfig;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import io.micrometer.prometheus.PrometheusConfig;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.micrometer.prometheus.rsocket.PrometheusRSocketClient;
-import io.prometheus.client.CollectorRegistry;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -32,7 +28,6 @@ import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,17 +43,6 @@ public class ExampleApplication {
 @Configuration
 class MetricsConfiguration {
     @Bean
-    PrometheusMeterRegistry prometheusMeterRegistry(CollectorRegistry collectorRegistry) {
-        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT, collectorRegistry, Clock.SYSTEM);
-
-        PrometheusRSocketClient.connect(registry, "23.251.146.199", 7001)
-          .retryBackoff(Long.MAX_VALUE, Duration.ofSeconds(10), Duration.ofMinutes(10))
-          .subscribe();
-
-        return registry;
-    }
-
-    @Bean
     MeterFilter commonTags(@Value("${cf.foundation:local}") String foundation,
                            @Value("${VCAP_APPLICATION:#{null}}") String app,
                            @Value("${CF_INSTANCE_INDEX:0}") String instanceIndex) {
@@ -70,7 +54,7 @@ class MetricsConfiguration {
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
-        }).orElse("unknown");
+        }).orElse("multifoundationmetrics-v000");
 
         Names names = Names.parseName(serverGroup);
 
@@ -170,3 +154,4 @@ class EndpointHealthConfiguration {
         }).findFirst().orElse(Health.up().build());
     }
 }
+
