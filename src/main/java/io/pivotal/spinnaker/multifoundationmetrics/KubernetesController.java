@@ -44,7 +44,7 @@ public class KubernetesController {
         deployment.map(d -> d.getMetadata().getAnnotations()).orElse(emptyMap())
       )
       .flatMap(a -> a.entrySet().stream())
-      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (k1, k2) -> k1));
 
     for (Map.Entry<String, String> annot : annotations.entrySet()) {
       logger.warn(annot.getKey() + "=" + annot.getValue());
