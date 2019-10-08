@@ -8,8 +8,14 @@ import java.util.Map;
 
 @RestController
 public class KubernetesController {
+  private final PodUtils podUtils;
+
+  public KubernetesController(PodUtils podUtils) {
+    this.podUtils = podUtils;
+  }
+
   @GetMapping("/k8s/annotations")
-  public Map<String, String> annotations(PodUtils podUtils) {
+  public Map<String, String> annotations() {
     return podUtils.currentPod().get().getMetadata().getAnnotations();
   }
 }
