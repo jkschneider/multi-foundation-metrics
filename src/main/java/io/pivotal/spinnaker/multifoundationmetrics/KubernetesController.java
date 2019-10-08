@@ -41,7 +41,7 @@ public class KubernetesController {
       .of(
         pod.getMetadata().getAnnotations(),
         replicaSet.map(rs -> rs.getMetadata().getAnnotations()).orElse(emptyMap()),
-        deployment.map(d -> d.getMetadata().getAnnotations()).orElse(emptyMap()),
+        deployment.map(d -> d.getMetadata().getAnnotations()).orElse(emptyMap())
       )
       .flatMap(a -> a.entrySet().stream())
       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
