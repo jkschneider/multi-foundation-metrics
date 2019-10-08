@@ -20,5 +20,5 @@ subjects:
     namespace: default
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: cluster-status
   apiGroup: rbac.authorization.k8s.io
