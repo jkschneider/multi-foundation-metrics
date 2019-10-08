@@ -51,7 +51,8 @@ public class PaneraMetricsConfiguration {
             "revision", annotations.getOrDefault("deployment.kubernetes.io/revision", "unknown"),
             "application", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
             "cluster", annotations.getOrDefault("moniker.spinnaker.io/cluster", "unknown"),
-            "location", annotations.getOrDefault("artifact.spinnaker.io/location", "unknown")
+            "location", annotations.getOrDefault("artifact.spinnaker.io/location", "unknown"),
+            "host", host
           ));
         } catch(KubernetesClientException e) {
           logger.warn("Unable to apply kubernetes tags", e);
