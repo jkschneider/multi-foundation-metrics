@@ -42,7 +42,8 @@ dependencies {
 //	implementation 'io.micrometer:micrometer-registry-prometheus:latest.release'
 //	implementation 'io.micrometer:micrometer-registry-atlas:latest.release'
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.0.3.RELEASE'
+	implementation 'io.fabric8:kubernetes-client:latest.release'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.0.3.RELEASE'
 
 	implementation 'commons-io:commons-io:latest.release'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
