@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multifoundationmetrics
+  namespace: default
+  annotations:
+    spinnaker.io/sequence: v069
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: demo
+          image: jkschneider/multifoundationmetrics:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
