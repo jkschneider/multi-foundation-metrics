@@ -3,10 +3,9 @@ package io.pivotal.spinnaker.multifoundationmetrics;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.frigga.Names;
-import io.micrometer.core.instrument.Clock;
-import io.micrometer.core.instrument.Tags;
-import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.config.MeterFilter;
+import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.simple.CountingMode;
 import io.micrometer.core.instrument.simple.SimpleConfig;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
@@ -23,6 +22,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.repository.Repository;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,8 +59,9 @@ class MetricsConfiguration {
 
         Names names = Names.parseName(serverGroup);
 
-        return MeterFilter.commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster(),
-          "cf.instance.number", instanceIndex));
+        return MeterFilter
+          .commonTags(Tags.of("foundation", foundation, "app", names.getApp(), "cluster", names.getCluster(),
+            "cf.instance.number", instanceIndex));
     }
 
     @Bean
@@ -102,6 +104,10 @@ interface PersonRepository extends Repository<Person, String> {
 class PersonController {
     private final PersonRepository repository;
     private volatile boolean stable = true;
+    private volatile Double errorRatio;
+
+    private CountDownLatch nextError;
+    private CountDownLatch errorReset;
 
     public PersonController(PersonRepository repository) {
         this.repository = repository;
@@ -110,23 +116,41 @@ class PersonController {
     @GetMapping(path = "/persons")
     public Flux<Person> all() {
         if (!stable) {
-            throw new RuntimeException("i'm unstable");
+            if(nextError != null) {
+                nextError.countDown();
+                errorReset.countDown();
+                if(nextError.getCount() == 0) {
+                    throw new RuntimeException("i'm unstable");
+                }
+                if(errorReset.getCount() == 0) {
+                    resetNextErrorLatch();
+                }
+            } else {
+                throw new RuntimeException("i'm unstable");
+            }
         }
         return this.repository.findAll();
     }
 
     @GetMapping(path = "/destabilize")
-    public String destabilize() {
+    public String destabilize(@RequestParam Double errorRatio) {
         this.stable = false;
+        this.errorRatio = errorRatio;
+        resetNextErrorLatch();
         return "i'm going to start breaking stuff";
     }
 
     @GetMapping(path = "/stabilize")
     public String stabilize() {
         this.stable = true;
+        this.errorRatio = null;
         return "i'm healthy again";
     }
 
+    private void resetNextErrorLatch() {
+        nextError = new CountDownLatch((int) (100 - (100*errorRatio)));
+        errorReset = new CountDownLatch(100);
+    }
 }
 
 @Configuration
@@ -154,4 +178,3 @@ class EndpointHealthConfiguration {
         }).findFirst().orElse(Health.up().build());
     }
 }
-

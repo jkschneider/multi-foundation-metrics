@@ -35,7 +35,11 @@ if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'io.micrometer.publishing:prometheus-rsocket-spring:0.6.2'
+	implementation 'io.micrometer.prometheus:prometheus-rsocket-spring:0.9.0'
+//	implementation 'io.micrometer:micrometer-registry-prometheus:latest.release'
+//	implementation 'io.micrometer:micrometer-registry-atlas:latest.release'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.0.3.RELEASE'
 
 	implementation 'commons-io:commons-io:latest.release'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
