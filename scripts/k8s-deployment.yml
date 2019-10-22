@@ -1,49 +1,10 @@
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: replicaset-annotations-service-account
-  namespace: default
-  labels:
-    name: replicaset-annotations-service-account
-    app: appname
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: replicaset-annotations-role
-  namespace: default
-  labels:
-    name: replicaset-annotations-role
-    app: appname
-rules:
-  - apiGroups: ["apps"]
-    resources: ["replicasets"]
-    verbs: ["get"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: replicaset-annotations-role-binding
-  namespace: default
-  labels:
-    name: replicaset-annotations-role-binding
-    app: appname
-subjects:
-  - kind: ServiceAccount
-    name: replicaset-annotations-service-account
-roleRef:
-  kind: Role
-  name: replicaset-annotations-role-binding
-  apiGroup: rbac.authorization.k8s.io
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo
   namespace: default
   annotations:
-    moniker.spinnaker.io/stack: ${STACK:}
+    moniker.spinnaker.io/stack: ${stack:}
 spec:
   replicas: 1
   selector:
@@ -54,7 +15,7 @@ spec:
       labels:
         app: demo
     spec:
-      serviceAccountName: replicaset-annotations-service-account
+      serviceAccountName: default
       containers:
         - name: demo
           image: jkschneider/multifoundationmetrics:latest

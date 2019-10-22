@@ -17,8 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 import java.util.function.Function;
 
-import static java.util.Collections.emptyMap;
-
 @Configuration
 public class MetricsConfiguration {
   private final Logger logger = LoggerFactory.getLogger(MetricsConfiguration.class);
@@ -41,12 +39,7 @@ public class MetricsConfiguration {
             .withName(host)
             .get()
             .getMetadata()
-            .getOwnerReferences()
-            .stream()
-            .findFirst()
-            .map(ref -> k8sClient.apps().replicaSets().withName(ref.getName()).get())
-            .map(replicaSet -> replicaSet.getMetadata().getAnnotations())
-            .orElse(emptyMap());
+            .getAnnotations();
           idMapper = id -> id.withTags(Tags.of(
             "revision", annotations.getOrDefault("deployment.kubernetes.io/revision", "unknown"),
             "app", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
@@ -70,7 +63,7 @@ public class MetricsConfiguration {
   @Bean
   @ConditionalOnMissingBean(KubernetesClient.class)
   MeterFilter appAndHostTagsMeterFilter() {
-    return MeterFilter.commonTags(Tags.of("application", appName, "host", host));
+    return MeterFilter.commonTags(Tags.of("app", appName, "host", host));
   }
 
   @Bean
