@@ -20,8 +20,8 @@ import java.util.function.Function;
 import static java.util.Collections.emptyMap;
 
 @Configuration
-public class PaneraMetricsConfiguration {
-  private final Logger logger = LoggerFactory.getLogger(PaneraMetricsConfiguration.class);
+public class MetricsConfiguration {
+  private final Logger logger = LoggerFactory.getLogger(MetricsConfiguration.class);
 
   @Value("${spring.application.name:unknown}")
   private String appName;
@@ -49,7 +49,7 @@ public class PaneraMetricsConfiguration {
             .orElse(emptyMap());
           idMapper = id -> id.withTags(Tags.of(
             "revision", annotations.getOrDefault("deployment.kubernetes.io/revision", "unknown"),
-            "application", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
+            "app", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
             "cluster", annotations.getOrDefault("moniker.spinnaker.io/cluster", "unknown"),
             "location", annotations.getOrDefault("artifact.spinnaker.io/location", "unknown"),
             "host", host
