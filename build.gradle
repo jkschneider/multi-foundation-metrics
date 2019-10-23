@@ -31,23 +31,23 @@ if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
 
 		springBootApplication {
 			tag = "$dockerUser/multifoundationmetrics"
+
+			// contains libc6 needed by rsocket, which the default of
+			// openjdk:jre-alpine does not
+			baseImage = 'adoptopenjdk/openjdk8:alpine-slim'
 		}
 	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.micrometer.prometheus:prometheus-rsocket-spring:0.9.0'
-//	implementation 'io.micrometer:micrometer-registry-prometheus:latest.release'
-//	implementation 'io.micrometer:micrometer-registry-atlas:latest.release'
 
 	implementation 'io.fabric8:kubernetes-client:latest.release'
 	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.0.3.RELEASE'
 
 	implementation 'commons-io:commons-io:latest.release'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
-	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	implementation 'com.netflix.frigga:frigga:0.18.0'
 
 	compileOnly 'org.projectlombok:lombok:latest.release'
