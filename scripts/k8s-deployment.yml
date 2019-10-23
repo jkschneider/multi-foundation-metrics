@@ -1,10 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo
+  name: ${cluster:demo}
   namespace: default
-  annotations:
-    moniker.spinnaker.io/stack: ${stack:}
 spec:
   replicas: 1
   selector:
