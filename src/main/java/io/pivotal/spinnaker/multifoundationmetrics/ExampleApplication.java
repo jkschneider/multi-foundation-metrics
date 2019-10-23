@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 public class ExampleApplication {
@@ -27,21 +27,24 @@ public class ExampleApplication {
 
   @Bean
   PersonRepository personRepository() {
-    List<String> lastNames = names("/dist.all.last");
-    List<String> femaleFirst = names("/dist.female.first");
-    List<String> maleFirst = names("/dist.male.first");
+    List<String> names = names();
 
-    return () -> Stream.concat(maleFirst.stream(), femaleFirst.stream())
-      .flatMap(first -> lastNames.stream().map(last -> new Person(first, last)))
-      .collect(Collectors.toList());
+    return () -> {
+      List<String> shuffledNames = new ArrayList<>(names);
+      Collections.shuffle(shuffledNames);
+      return shuffledNames.stream()
+        .limit(Math.max(25, r.nextInt(250)))
+        .map(n -> {
+          String[] nameParts = n.trim().split(" ");
+          return new Person(nameParts[0], nameParts[1]);
+        })
+        .collect(Collectors.toList());
+    };
   }
 
-  private List<String> names(String fileName) {
-    try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)))) {
-      return buffer.lines()
-        .limit(Math.min(5, r.nextInt(20)))
-        .map(name -> name.split(" ")[0])
-        .collect(Collectors.toList());
+  private List<String> names() {
+    try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/names.txt")))) {
+      return buffer.lines().collect(Collectors.toList());
     } catch (IOException e) {
       e.printStackTrace();
     }
