@@ -31,7 +31,6 @@ metadata:
   namespace: default
 spec:
   selector:
-    source: demo
     app: demo
   ports:
   - protocol: TCP
