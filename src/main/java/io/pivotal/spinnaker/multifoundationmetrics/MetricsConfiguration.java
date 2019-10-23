@@ -40,6 +40,11 @@ public class MetricsConfiguration {
             .get()
             .getMetadata()
             .getAnnotations();
+
+          for (Map.Entry<String, String> annotation : annotations.entrySet()) {
+            logger.info("Kubernetes pod annotation <" + annotation.getKey() + "=" + annotation.getValue() + ">");
+          }
+
           idMapper = id -> id.withTags(Tags.of(
             "revision", annotations.getOrDefault("deployment.kubernetes.io/revision", "unknown"),
             "app", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
@@ -49,7 +54,7 @@ public class MetricsConfiguration {
           ));
         } catch(KubernetesClientException e) {
           logger.warn("Unable to apply kubernetes tags", e);
-          idMapper = id -> id.withTags(Tags.of("application", appName, "host", host));
+          idMapper = id -> id.withTags(Tags.of("app", appName, "host", host));
         }
       }
 
