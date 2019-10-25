@@ -30,7 +30,7 @@ if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
 		}
 
 		springBootApplication {
-			tag = "$dockerUser/multifoundationmetrics:$project.version"
+			tag = "$dockerUser/multifoundationmetrics:${project.version.contains('+') ? 'SNAPSHOT' : project.version}"
 
 			// contains libc6 needed by rsocket, which the default of
 			// openjdk:jre-alpine does not
@@ -110,3 +110,4 @@ task('generateBuildProperties') {
 }
 
 build.dependsOn('generateBuildProperties')
+tasks.release.dependsOn('dockerPublishImage')
