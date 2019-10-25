@@ -37,6 +37,8 @@ if(hasProperty('dockerUser') && hasProperty('dockerPassword')) {
 			baseImage = 'adoptopenjdk/openjdk8:alpine-slim'
 		}
 	}
+
+	tasks.release.dependsOn('dockerPushImage')
 }
 
 dependencies {
@@ -110,4 +112,3 @@ task('generateBuildProperties') {
 }
 
 build.dependsOn('generateBuildProperties')
-tasks.release.dependsOn('dockerPublishImage')
