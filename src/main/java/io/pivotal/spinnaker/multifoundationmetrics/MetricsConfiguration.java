@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -48,13 +49,14 @@ public class MetricsConfiguration {
           idMapper = id -> id.withTags(Tags.of(
             "revision", annotations.getOrDefault("deployment.kubernetes.io/revision", "unknown"),
             "app", annotations.getOrDefault("moniker.spinnaker.io/application", appName),
-            "cluster", annotations.getOrDefault("moniker.spinnaker.io/cluster", "unknown"),
+            "cluster", Arrays.stream(annotations.getOrDefault("moniker.spinnaker.io/cluster", "unknown")
+              .split(" ")).reduce((first, second) -> second).orElse("unknown"),
             "location", annotations.getOrDefault("artifact.spinnaker.io/location", "unknown"),
             "host", host
           ));
         } catch(KubernetesClientException e) {
           logger.warn("Unable to apply kubernetes tags", e);
-          idMapper = id -> id.withTags(Tags.of("app", appName, "host", host));
+          idMapper = id -> id.withTags(Tags.of("app", appName, "host", host, "cluster", "unknown"));
         }
       }
 
