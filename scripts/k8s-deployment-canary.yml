@@ -37,7 +37,7 @@ roleRef:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metricsdemocanary
+  name: metricsdemo-canary
   namespace: default
 spec:
   replicas: 1
