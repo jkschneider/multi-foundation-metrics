@@ -1,0 +1,73 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-annotations-service-account
+  namespace: default
+  labels:
+    name: pod-annotations-service-account
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-annotations-role
+  namespace: default
+  labels:
+    name: pod-annotations-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-annotations-role-binding
+  namespace: default
+  labels:
+    name: pod-annotations-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: pod-annotations-service-account
+roleRef:
+  kind: Role
+  name: pod-annotations-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metricsdemo-canary
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metricsdemo
+  template:
+    metadata:
+      labels:
+        app: metricsdemo
+    spec:
+      serviceAccountName: pod-annotations-service-account
+      containers:
+        - name: metricsdemo
+          image: jkschneider/multifoundationmetrics:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: metricsdemo
+  namespace: default
+spec:
+  selector:
+    app: metricsdemo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
