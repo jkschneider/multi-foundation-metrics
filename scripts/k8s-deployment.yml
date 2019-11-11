@@ -43,11 +43,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${cluster?:"metricsdemo"}
+      app: metricsdemo
   template:
     metadata:
       labels:
-        app: ${cluster?:"metricsdemo"}
+        app: metricsdemo
     spec:
       serviceAccountName: pod-annotations-service-account
       containers:
