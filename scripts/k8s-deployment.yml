@@ -37,17 +37,17 @@ roleRef:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${cluster:metricsdemo}
+  name: ${cluster?:metricsdemo}
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${cluster:metricsdemo}
+      app: ${cluster?:metricsdemo}
   template:
     metadata:
       labels:
-        app: ${cluster:metricsdemo}
+        app: ${cluster?:metricsdemo}
     spec:
       serviceAccountName: pod-annotations-service-account
       containers:
