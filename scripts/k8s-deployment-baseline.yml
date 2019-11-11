@@ -37,7 +37,7 @@ roleRef:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metricsdemo-baseline
+  name: metricsdemobaseline
   namespace: default
 spec:
   replicas: 1
